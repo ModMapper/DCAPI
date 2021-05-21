@@ -26,7 +26,7 @@ namespace DCAPI.Gallery {
             switch(uri.Host) {
             case "gall.dcinside.com": {
                 switch(uri.AbsolutePath) {
-                case "mgallery/board/view/":
+                case "/mgallery/board/view/":
                 case "/board/view/":
                     var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
                     if(!Int64.TryParse(query["no"], out long no)) return default;
