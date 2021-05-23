@@ -22,8 +22,8 @@ namespace DCAPI {
         /// <returns>해당 결과의 성공 여부와, 메시지입니다.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (bool result, string cause) GetResult(JsonElement element) {
-            if(!element.TryGetProperty("result", out var value)) return (true, null);
-            if(value.ValueKind != JsonValueKind.False) return (true, null);
+            if(!element.TryGetProperty("result", out var value)) return (true, element.GetString("cause"));
+            if(value.ValueKind != JsonValueKind.False) return (true, element.GetString("cause"));
             return (false, element.GetString("cause"));
         }
 
