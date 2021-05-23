@@ -28,7 +28,10 @@ namespace DCAPI {
         public RESTClient REST { get; }
 
         /// <summary>디시인사이드 앱을 인증하는 토큰입니다</summary>
-        public AppToken Token => token.Result;
+        public AppToken Token {
+            get => token.Result;
+            set => token = Task.FromResult(value);
+        }
 
         /// <summary>새로운 토큰으로 갱신합니다.</summary>
         public void Update() 

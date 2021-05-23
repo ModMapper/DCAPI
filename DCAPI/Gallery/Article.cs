@@ -8,7 +8,7 @@ using DCAPI.Sessions;
 
 namespace DCAPI.Gallery {
     /// <summary>디시인사이드 게시글입니다.</summary>
-    public record Article (RESTClient REST, AppToken Token, string Id, long No) {
+    public record Article(RESTClient REST, AppToken Token, string Id, long No) {
 
         /// <summary>URL로부터 갤러리 Id와 게시글 번호를 가져옵니다.</summary>
         /// <param name="url">가져올 게시글의 URL문자열입니다.</param>
