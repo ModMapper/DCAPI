@@ -54,7 +54,7 @@ namespace DCAPI {
         string IUser.Password => null;
 
         /// <summary>해당 유저의 UserId입니다. 로그인 되지 않았을 시 null을 반환합니다.</summary>
-        string IUser.UserId => User?.Result.GetString("user_id");
+        public string UserId => User?.Result.GetString("user_id");
 
         /// <summary>해당 유저의 닉네임입니다. 로그인 되지 않았을 시 null을 반환합니다.</summary>
         public string Name => User?.Result.GetString("username");
