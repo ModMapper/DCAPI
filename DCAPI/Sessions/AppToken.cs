@@ -1,9 +1,11 @@
 ﻿using DCAPI.REST;
 using System;
 using System.Globalization;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DCAPI.Sessions {
@@ -35,14 +37,31 @@ namespace DCAPI.Sessions {
                 signature, package, vCode, vName, ClientToken).Result; //Fallback...
             DCException.CheckResult(json);
             AppId = json.GetString("app_id");
-            CreatedTime = DateTime.Now;
+            Expires = DateTime.Now.AddHours(11);
         }
 
         /// <summary>ClientToken과 AppId를 사용해 새 토큰을 생성합니다..</summary>
         /// <param name="clienttoken">알림 수신에 사용되는 FCM의 Token값입니다.</param>
         /// <param name="appid">앱 인증에 사용되는 AppId값입니다.</param>
         public AppToken(string clienttoken, string appid)
-            => (ClientToken, AppId, CreatedTime) = (clienttoken, appid, DateTime.Now);
+            => (ClientToken, AppId, Expires) = (clienttoken, appid, DateTime.Now.AddHours(11));
+
+        /// <summary>ClientToken과 AppId 그리고 만료일을 통해 새 토큰을 생성합니다.</summary>
+        /// <param name="clienttoken">알림 수신에 사용되는 FCM의 Token값입니다.</param>
+        /// <param name="appid">앱 인증에 사용되는 AppId값입니다.</param>
+        /// <param name="expires">해당 토큰의 만료 기한입니다.</param>
+        protected AppToken(string clienttoken, string appid, DateTime expires)
+            => (ClientToken, AppId, Expires) = (clienttoken, appid, expires);
+
+        /// <summary>스트림으로부터 직렬화된 토큰을 읽어들입니다.</summary>
+        /// <param name="stream">토큰을 읽어들일 스트림입니다.</param>
+        public AppToken(Stream stream) {
+            using var doc = JsonDocument.Parse(stream);
+            var element = doc.RootElement;
+            ClientToken = element.GetProperty("clienttoken").GetString();
+            AppId = element.GetProperty("appid").GetString();
+            Expires = element.GetProperty("expires").GetDateTime();
+        }
 
         /// <summary>앱 인증에 사용되는 AppId입니다.</summary>
         public string AppId { get; }
@@ -51,7 +70,19 @@ namespace DCAPI.Sessions {
         public string ClientToken { get; }
 
         /// <summary>해당 토큰이 생성된 시간입니다.</summary>
-        public DateTime CreatedTime { get; }
+        public DateTime Expires { get; }
+
+        /// <summary>해당 토큰을 스트림에 직렬화하여 작성합니다.</summary>
+        /// <param name="stream">토큰을 작성할 스트림입니다.</param>
+        public void WriteTo(Stream stream) {
+            using var writer = new Utf8JsonWriter(stream);
+            writer.WriteStartObject();
+            writer.WriteString("clienttoken", ClientToken);
+            writer.WriteString("appid", AppId);
+            writer.WriteString("expires", Expires);
+            writer.WriteEndObject();
+            writer.Flush();
+        }
 
         /// <summary>새 토큰을 비동기적으로 발급합니다.</summary>
         /// <param name="rest">서버 연결시에 사용될 클라이언트 입니다.</param>
@@ -68,11 +99,27 @@ namespace DCAPI.Sessions {
         /// <param name="rest">서버 연결시에 사용될 클라이언트 입니다.</param>
         /// <param name="clienttoken">알림 수신에 사용되는 FCM의 Token값입니다.</param>
         /// <returns>발급된 새 토큰입니다.</returns>
-        public static async Task<AppToken> FormClientToken(RESTClient rest, string clienttoken) {
+        public static async Task<AppToken> FromClientToken(RESTClient rest, string clienttoken) {
             var json = await DCID.AppKey(rest, await GetValueToken(rest),
                 signature, package, vCode, vName, clienttoken); //Fallback...
             DCException.CheckResult(json);
             return new AppToken(clienttoken, json.GetString("app_id"));
+        }
+
+        /// <summary>스트림으로부터 직렬화된 토큰을 읽어들입니다.</summary>
+        /// <param name="stream">토큰을 읽어들일 스트림입니다.</param>
+        /// <returns>스트림으로부터 읽어들인 앱 토큰입니다. 실패시 null을 반환합니다.</returns>
+        public static async Task<AppToken> FromStream(Stream stream) {
+            try {
+                using var doc = await JsonDocument.ParseAsync(stream);
+                var element = doc.RootElement;
+                return new(
+                        element.GetProperty("clienttoken").GetString(),
+                        element.GetProperty("appid").GetString(),
+                        element.GetProperty("expires").GetDateTime());
+            } catch {
+                return null;
+            }
         }
 
         /// <summary>서버로부터 인증시 사용될 ValueToken을 생성합니다.</summary>

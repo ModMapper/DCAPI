@@ -24,10 +24,18 @@ namespace DCAPI {
             token = AppToken.GetAsync(rest);
         }
 
+        /// <summary>해당 REST 클라이언트와 토큰을 이용해 API를 생성합니다.</summary>
+        /// <param name="rest">서버 연결시에 사용될 클라이언트 입니다.</param>
+        /// <param name="token">서디시인사이드 앱을 인증하는 토큰입니다.</param>
+        public DCAPI(RESTClient rest, AppToken token) {
+            REST = rest;
+            this.token = Task.FromResult(token);
+        }
+
         /// <summary>서버 연결시에 사용될 클라이언트 입니다.</summary>
         public RESTClient REST { get; }
 
-        /// <summary>디시인사이드 앱을 인증하는 토큰입니다</summary>
+        /// <summary>디시인사이드 앱을 인증하는 토큰입니다.</summary>
         public AppToken Token {
             get => token.Result;
             set => token = Task.FromResult(value);
