@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31205.134
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DCAPI", "DCAPI\DCAPI.csproj", "{5882A09B-B40A-4EC7-9E34-E3EB2FDA766B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{EAEE762A-E86E-4331-A908-635B6B902A48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{5882A09B-B40A-4EC7-9E34-E3EB2FDA766B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5882A09B-B40A-4EC7-9E34-E3EB2FDA766B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5882A09B-B40A-4EC7-9E34-E3EB2FDA766B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAEE762A-E86E-4331-A908-635B6B902A48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAEE762A-E86E-4331-A908-635B6B902A48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAEE762A-E86E-4331-A908-635B6B902A48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAEE762A-E86E-4331-A908-635B6B902A48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

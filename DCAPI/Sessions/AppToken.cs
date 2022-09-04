@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 namespace DCAPI.Sessions {
     /// <summary>디시인사이드 앱에 사용되는 토큰을 관리하는 클래스입니다</summary>
     public class AppToken {
-        private const string    signature   = "ReOo4u96nnv8Njd7707KpYiIVYQ3FlcKHDJE046Pg6s=";
-        private const string    package     = "com.dcinside.app";
-        private const long      vCode       = 30413; //30207;
-        private const string    vName       = "4.2.6"; //"3.8.12";
+        public const string    signature   = "ReOo4u96nnv8Njd7707KpYiIVYQ3FlcKHDJE046Pg6s=";
+        public const string    package     = "com.dcinside.app";
+        public const long      vCode       = 30419; //30413; //30207;
+        public const string    vName       = "4.3.2"; //"4.2.6"; //"3.8.12";
 
         private static readonly SHA256 sha = SHA256.Create();
 

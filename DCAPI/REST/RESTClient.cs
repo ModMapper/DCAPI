@@ -142,12 +142,26 @@ namespace DCAPI.REST {
         /// <returns>해당 전송 결과에 대한 <see cref="JsonElement"/>입니다.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public virtual async Task<JsonElement> Send(HttpRequestMessage req) {
-            using var res = await http.SendAsync(req);
+            //using var res = await http.SendAsync(req).ConfigureAwait(true);
+            using var res = http.Send(req);
             using var stream = await res.Content.ReadAsStreamAsync();
             if(stream.Length == 0) return default;
             var json = JsonDocument.Parse(stream).RootElement;
             return json.ValueKind == JsonValueKind.Array &&
                 json.GetArrayLength() == 1 ? json[0] : json;
+        }
+
+        /// <summary>해당 <see cref="HttpRequestMessage"/>를 전송하고 <see cref="HttpResponseMessage"/>를 받아옵니다.</summary>
+        /// <param name="req">전송할 <see cref="HttpRequestMessage"/>입니다.</param>
+        /// <returns>해당 전송 결과에 대한 <see cref="JsonElement"/>입니다.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public virtual async Task<string> SendString(HttpRequestMessage req) {
+            try {
+                using var res = http.Send(req);
+                return await res.Content.ReadAsStringAsync();
+            } catch (Exception e) {
+                return null;
+			}
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

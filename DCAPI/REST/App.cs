@@ -52,7 +52,7 @@ namespace DCAPI.REST {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<JsonElement> GalleryDelete(RESTClient rest, string? write_pw, string? user_id, string client_token, string id, long no, string mode, string app_id)
-            => rest.PostApp("http://app.dcinside.com/api/gall_delete.php",
+            => rest.PostApp("http://app.dcinside.com/api/gall_del.php",
                 new { write_pw, user_id, client_token, id, no, mode, app_id });
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

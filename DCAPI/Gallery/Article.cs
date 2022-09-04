@@ -38,7 +38,7 @@ namespace DCAPI.Gallery {
                 var segment = uri.AbsolutePath.Split('/', 5);
                 if(segment.Length < 4 || segment[1] != "board") return default;
                 if(!Int64.TryParse(segment[3], out long no)) return default;
-                return (uri.Segments[2], no);
+                return (segment[2], no);
             }
             default:
                 return default;
